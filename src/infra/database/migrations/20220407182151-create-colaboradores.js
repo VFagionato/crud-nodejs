@@ -16,7 +16,6 @@ module.exports = {
       email: {
         type: Sequelize.STRING,
         allowNull: false,
-        unique: true,
         validate: {
           isEmail: true
         }
@@ -27,7 +26,8 @@ module.exports = {
       },
       cpf: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       setor: {
         type: Sequelize.INTEGER,

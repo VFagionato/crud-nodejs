@@ -1,4 +1,14 @@
 /* eslint-disable no-undef */
+const Setor = require('../../../src/infra/models/Setores')
+const Colaborador = require('../../../src/infra/models/Colaboradores')
+const Sequelize = require('sequelize')
+const dbConfig = require('../../../src/main/config/db-config')
+
+const mockConfig = { ...dbConfig, host: 'localhost' }
+const sequelize = new Sequelize(mockConfig)
+
+Setor.init(sequelize)
+Colaborador.init(sequelize)
 
 const makeCpfValidator = () => {
   class CpfValidator {
@@ -65,7 +75,19 @@ class RegisterUserRepository {
       this.cpfValidator.validate(cpf)
       this.emailValidator.validate(email)
       this.phoneValidator.validate(telefone)
+
+      if (!setor) {
+        const ids = []
+        const setores = await Setor.findAll()
+        for (const item of setores) {
+          ids.push(item.dataValues.id)
+        }
+        setor = ids[Math.floor((Math.random() * ids.length))]
+      }
+
+      this.colaborador = Colaborador.build({ cpf, email, nome, telefone, setor })
     } catch (error) {
+      console.log(error)
       throw new Error(error)
     }
   }
@@ -100,5 +122,11 @@ describe('Register User Repository', () => {
     const { sut, phoneValidatorSpy } = makeSut()
     await sut.register(validParam)
     expect(phoneValidatorSpy.phone).toBe(validParam.telefone)
+  })
+
+  test('should define setor id random if setor not present in param', async () => {
+    const { sut } = makeSut()
+    await sut.register(validParam)
+    expect(typeof sut.colaborador.setor).toBe('number')
   })
 })
