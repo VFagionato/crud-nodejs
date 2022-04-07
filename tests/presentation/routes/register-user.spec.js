@@ -24,6 +24,15 @@ const makeRegisterUserRepository = () => {
   return registerUserRepository
 }
 
+const makeRegisterUserRepositoryWithError = () => {
+  class RegisterUserRepository {
+    async register () {
+      throw new Error()
+    }
+  }
+  return new RegisterUserRepository()
+}
+
 const makeSut = () => {
   const registerUserRepositorySpy = makeRegisterUserRepository()
   const sut = new RegisterUserRouter({ registerUserRepository: registerUserRepositorySpy })
@@ -39,15 +48,20 @@ class RegisterUserRouter {
   }
 
   async route (httpRequest) {
-    if (!httpRequest.body) {
-      return HttpResponse.badRequest('body not present in request')
+    try {
+      if (!httpRequest.body) {
+        return HttpResponse.badRequest('body not present in request')
+      }
+      const { cpf, nome, telefone, email, setor } = httpRequest.body
+      if (!cpf || !nome || !telefone || !email) {
+        return HttpResponse.badRequest('body must contain at least: cpf, name, phone, email')
+      }
+      const user = await this.registerUserRepository.register({ cpf, nome, telefone, email, setor })
+      return HttpResponse.created(user)
+    } catch (error) {
+      return HttpResponse.ServerError(error.message)
     }
-    const { cpf, nome, telefone, email, setor } = httpRequest.body
-    if (!cpf || !nome || !telefone || !email) {
-      return HttpResponse.badRequest('body must contain at least: cpf, name, phone, email')
-    }
-    const user = await this.registerUserRepository.register({ cpf, nome, telefone, email, setor })
-    return HttpResponse.created(user)
+
   }
 }
 
@@ -100,5 +114,12 @@ describe('Register User Router', () => {
     const response = await sut.route(validRequest)
     expect(response.statusCode).toBe(201)
     expect(response.body).toEqual(registerUserRepositorySpy.user)
+  })
+
+  test('should return 500 with registerUserRepository throw', async () => {
+    const sut = new RegisterUserRouter({ registerUserRepository: makeRegisterUserRepositoryWithError() })
+    const response = await sut.route(validRequest)
+    expect(response.statusCode).toBe(500)
+    expect(response.body).toBe('')
   })
 })
