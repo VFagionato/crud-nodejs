@@ -11,7 +11,7 @@
     "test:unit": "yarn test -- --watch -c jest-unit-config.js",
     "test:integration": "yarn test -- --watch -c jest-integration-config.js",
     "test:staged": "yarn test -- --findRelatedTests --silent",
-    "test:ci": "yarn test -- --converage --silent",
+    "test:ci": "yarn test -- --coverage --silent",
     "migrations": "yarn sequelize db:migrate",
     "seeds": "yarn sequelize db:seed:all",
     "start": "yarn migrations && yarn seeds && nodemon src/main/server.js"
