@@ -26,4 +26,11 @@ module.exports = class HttpResponse {
       body: 'Not found'
     }
   }
+
+  static ServerError (error) {
+    return {
+      statusCode: 500,
+      body: error
+    }
+  }
 }

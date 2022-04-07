@@ -47,6 +47,7 @@ class RegisterUserRouter {
       return HttpResponse.badRequest('body must contain at least: cpf, name, phone, email')
     }
     const user = await this.registerUserRepository.register({ cpf, nome, telefone, email, setor })
+    return HttpResponse.created(user)
   }
 }
 
@@ -92,5 +93,12 @@ describe('Register User Router', () => {
     expect(registerUserRepositorySpy.email).toBe(validRequest.body.email)
     expect(registerUserRepositorySpy.telefone).toBe(validRequest.body.telefone)
     expect(registerUserRepositorySpy.setor).toBe(null)
+  })
+
+  test('should return 201 with user registered successfully', async () => {
+    const { sut, registerUserRepositorySpy } = makeSut()
+    const response = await sut.route(validRequest)
+    expect(response.statusCode).toBe(201)
+    expect(response.body).toEqual(registerUserRepositorySpy.user)
   })
 })
