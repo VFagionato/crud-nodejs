@@ -31,6 +31,7 @@
     "husky": "^7.0.0",
     "jest": "^27.5.1",
     "lint-staged": "^12.3.7",
+    "nodemon": "^2.0.15",
     "sequelize-cli": "^6.4.1"
   },
   "dependencies": {
