@@ -34,7 +34,8 @@
     "nodemon": "^2.0.15",
     "pino": "^7.9.2",
     "pino-pretty": "^7.6.1",
-    "sequelize-cli": "^6.4.1"
+    "sequelize-cli": "^6.4.1",
+    "supertest": "^6.2.2"
   },
   "dependencies": {
     "express": "^4.17.3",
