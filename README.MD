@@ -63,3 +63,20 @@ e o segundo a API em nodeJS.
   ```bash
   docker-compose up
   ```
+
+## Utilização
+a URL base da aplicação é
+http://localhost:3000
+
+### Cadastrar novo colaborador
+Método POST em http://localhost:3000/api/colaborador
+
+exemplo de um body valido:
+```JSON
+{
+  "cpf": "698.506.960-60",
+  "nome": "João",
+  "email": "valido@mail.com"
+  "telefone": 117648272901
+}
+```
