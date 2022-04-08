@@ -100,6 +100,11 @@ describe('Register User Repository', () => {
     telefone: 11765787865,
     email: 'valid_mail@mail.com'
   }
+
+  afterAll(() => {
+    sequelize.close()
+  })
+
   test('should throw if no params are provided', async () => {
     const { sut } = makeSut()
     const promise = sut.register()
@@ -124,7 +129,7 @@ describe('Register User Repository', () => {
     expect(phoneValidatorSpy.phone).toBe(validParam.telefone)
   })
 
-  test('should define setor id random if setor not present in param', async () => {
+  test('should define random setor_id if setor not present in param', async () => {
     const { sut } = makeSut()
     await sut.register(validParam)
     expect(typeof sut.colaborador.setor).toBe('number')
