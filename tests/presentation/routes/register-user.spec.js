@@ -150,9 +150,21 @@ describe('Register User Router', () => {
     }
   })
 
-  test('should return 500 with registerUserRepository throw', async () => {
-    const sut = new RegisterUserRouter({ registerUserRepository: makeRegisterUserRepositoryWithError() })
-    const response = await sut.route(validRequest)
-    expect(response.statusCode).toBe(500)
+  test('should return 500 if any dependency throw', async () => {
+    const suts = [].concat(
+      new RegisterUserRouter({
+        registerUserRepository: makeRegisterUserRepositoryWithError(),
+        loadUserByCPFRepository: makeLoadUserByCPFRepository()
+      }),
+      new RegisterUserRouter({
+        registerUserRepository: makeRegisterUserRepository(),
+        loadUserByCPFRepository: makeLoadUserByCPFRepositoryWithError()
+      })
+    )
+
+    for (const sut of suts) {
+      const response = await sut.route(validRequest)
+      expect(response.statusCode).toBe(500)
+    }
   })
 })
