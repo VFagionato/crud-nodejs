@@ -22,6 +22,15 @@ const makeCpfValidator = () => {
   return cpfValidator
 }
 
+const makeCpfValidatorWithError = () => {
+  class CpfValidator {
+    validate (cpf) {
+      throw new Error('CPF not valid 400')
+    }
+  }
+  return new CpfValidator()
+}
+
 const makeEmailValidator = () => {
   class EmailValidator {
     validate (email) {
@@ -34,6 +43,15 @@ const makeEmailValidator = () => {
   return emailValidator
 }
 
+const makeEmailValidatorWithError = () => {
+  class EmailValidator {
+    validate (email) {
+      throw new Error('email not valid')
+    }
+  }
+  return new EmailValidator()
+}
+
 const makePhoneValidator = () => {
   class PhoneValidator {
     validate (phone) {
@@ -44,6 +62,15 @@ const makePhoneValidator = () => {
   const phoneValidator = new PhoneValidator()
   phoneValidator.isValid = true
   return phoneValidator
+}
+
+const makePhoneValidatorWithError = () => {
+  class PhoneValidator {
+    validate (phone) {
+      throw new Error('telefone not valid')
+    }
+  }
+  return new PhoneValidator()
 }
 
 const makeSut = () => {
@@ -88,7 +115,6 @@ class RegisterUserRepository {
       this.colaborador = await Colaborador.create({ cpf, email, nome, telefone, setor })
       return this.colaborador.dataValues
     } catch (error) {
-      console.log(error)
       throw new Error(error)
     }
   }
@@ -148,5 +174,30 @@ describe('Register User Repository', () => {
     const { sut } = makeSut()
     const response = await sut.register(validParam)
     expect(typeof response.id).toBe('number')
+  })
+
+  test('should throw if any validator throw', async () => {
+    const suts = [].concat(
+      new RegisterUserRepository({
+        cpfValidator: makeCpfValidatorWithError(),
+        emailValidator: makeEmailValidator(),
+        phoneValidator: makePhoneValidator()
+      }),
+      new RegisterUserRepository({
+        cpfValidator: makeCpfValidator(),
+        emailValidator: makeEmailValidatorWithError(),
+        phoneValidator: makePhoneValidator()
+      }),
+      new RegisterUserRepository({
+        cpfValidator: makeCpfValidator(),
+        emailValidator: makeEmailValidator(),
+        phoneValidator: makePhoneValidatorWithError()
+      })
+    )
+
+    for (const sut of suts) {
+      const promise = sut.register(validParam)
+      expect(promise).rejects.toThrow()
+    }
   })
 })

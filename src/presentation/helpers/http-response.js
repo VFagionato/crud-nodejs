@@ -33,4 +33,11 @@ module.exports = class HttpResponse {
       body: error
     }
   }
+
+  static customResponse (status, error) {
+    return {
+      statusCode: status,
+      body: error
+    }
+  }
 }

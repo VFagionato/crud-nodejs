@@ -22,7 +22,11 @@ module.exports = class RegisterUserRouter {
       const user = await this.registerUserRepository.register({ cpf, nome, telefone, email, setor })
       return HttpResponse.created(user)
     } catch (error) {
-      return HttpResponse.ServerError(error.message)
+      const status = parseInt(error.message.split(' ').pop())
+      if (!isNaN(status)) {
+        return HttpResponse.customResponse(status)
+      }
+      return HttpResponse.serverError()
     }
   }
 }
