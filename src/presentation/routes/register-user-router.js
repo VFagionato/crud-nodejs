@@ -1,8 +1,9 @@
 const HttpResponse = require('../helpers/http-response')
 
 module.exports = class RegisterUserRouter {
-  constructor ({ registerUserRepository } = {}) {
+  constructor ({ registerUserRepository, loadUserByCPFRepository } = {}) {
     this.registerUserRepository = registerUserRepository
+    this.loadUserByCPFRepository = loadUserByCPFRepository
   }
 
   async route (httpRequest) {
@@ -13,6 +14,10 @@ module.exports = class RegisterUserRouter {
       const { cpf, nome, telefone, email, setor } = httpRequest.body
       if (!cpf || !nome || !telefone || !email) {
         return HttpResponse.badRequest('body must contain at least: cpf, name, phone, email')
+      }
+      const userByCPF = await this.loadUserByCPFRepository.load(cpf)
+      if (userByCPF) {
+        return HttpResponse.badRequest('CPF already in use')
       }
       const user = await this.registerUserRepository.register({ cpf, nome, telefone, email, setor })
       return HttpResponse.created(user)

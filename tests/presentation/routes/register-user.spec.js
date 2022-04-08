@@ -1,4 +1,5 @@
 /* eslint-disable no-undef */
+const res = require('express/lib/response')
 const RegisterUserRouter = require('../../../src/presentation/routes/register-user-router')
 
 const makeRegisterUserRepository = () => {
@@ -33,12 +34,40 @@ const makeRegisterUserRepositoryWithError = () => {
   return new RegisterUserRepository()
 }
 
+const makeLoadUserByCPFRepository = () => {
+  class LoadUserByCPFRepository {
+    async load (cpf) {
+      this.cpf = cpf
+      return this.user
+    }
+  }
+  const loadUserByCPFlRepository = new LoadUserByCPFRepository()
+  loadUserByCPFlRepository.user = null
+  return loadUserByCPFlRepository
+}
+
+const makeLoadUserByCPFRepositoryWithError = () => {
+  class LoadUserByCPFRepository {
+    async load (cpf) {
+      throw new Error()
+    }
+  }
+  const loadUserByCPFlRepository = new LoadUserByCPFRepository()
+  loadUserByCPFlRepository.user = null
+  return loadUserByCPFlRepository
+}
+
 const makeSut = () => {
+  const loadUserByCPFRepositorySpy = makeLoadUserByCPFRepository()
   const registerUserRepositorySpy = makeRegisterUserRepository()
-  const sut = new RegisterUserRouter({ registerUserRepository: registerUserRepositorySpy })
+  const sut = new RegisterUserRouter({
+    registerUserRepository: registerUserRepositorySpy,
+    loadUserByCPFRepository: loadUserByCPFRepositorySpy
+  })
   return {
     sut,
-    registerUserRepositorySpy
+    registerUserRepositorySpy,
+    loadUserByCPFRepositorySpy
   }
 }
 
@@ -76,6 +105,15 @@ describe('Register User Router', () => {
     }
   })
 
+  test('should return 400 if user already exist', async () => {
+    const { sut, loadUserByCPFRepositorySpy } = makeSut()
+    loadUserByCPFRepositorySpy.user = 'valid_user'
+    const response = await sut.route(validRequest)
+    console.log(response.body)
+    expect(response.statusCode).toBe(400)
+    expect(response.body).toBe('CPF already in use')
+  })
+
   test('should call registerUserRepository with correct params', async () => {
     const { sut, registerUserRepositorySpy } = makeSut()
     await sut.route(validRequest)
@@ -97,6 +135,5 @@ describe('Register User Router', () => {
     const sut = new RegisterUserRouter({ registerUserRepository: makeRegisterUserRepositoryWithError() })
     const response = await sut.route(validRequest)
     expect(response.statusCode).toBe(500)
-    expect(response.body).toBe('')
   })
 })
