@@ -76,7 +76,7 @@ exemplo de um body valido:
 {
   "cpf": "698.506.960-60",
   "nome": "João",
-  "email": "valido@mail.com"
+  "email": "valido@mail.com",
   "telefone": 117648272901
 }
 ```
