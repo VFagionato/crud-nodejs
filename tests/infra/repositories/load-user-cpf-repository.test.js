@@ -17,6 +17,11 @@ const makeSut = () => {
 
 describe('Load User By CPF Repository', () => {
   const cpf = '765.667.887-09'
+
+  afterAll(() => {
+    sequelize.close()
+  })
+
   test('should throw if no CPF is provided', async () => {
     const sut = makeSut()
     const promise = sut.load()
