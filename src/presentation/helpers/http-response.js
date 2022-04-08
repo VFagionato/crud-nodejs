@@ -27,7 +27,7 @@ module.exports = class HttpResponse {
     }
   }
 
-  static ServerError (error) {
+  static serverError (error) {
     return {
       statusCode: 500,
       body: error
