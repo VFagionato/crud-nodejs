@@ -1,5 +1,4 @@
 /* eslint-disable no-undef */
-const res = require('express/lib/response')
 const RegisterUserRouter = require('../../../src/presentation/routes/register-user-router')
 
 const makeRegisterUserRepository = () => {
