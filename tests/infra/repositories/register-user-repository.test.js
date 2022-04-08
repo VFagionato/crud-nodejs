@@ -1,13 +1,15 @@
 /* eslint-disable no-undef */
-const Setor = require('../../../src/infra/models/Setores')
+const Setores = require('../../../src/infra/models/Setores')
 const Colaborador = require('../../../src/infra/models/Colaboradores')
 const Sequelize = require('sequelize')
 const dbConfig = require('../../../src/main/config/db-config')
 
+const RegisterUserRepository = require('../../../src/infra/repositories/register-user-repository')
+
 const mockConfig = { ...dbConfig, host: 'localhost' }
 const sequelize = new Sequelize(mockConfig)
 
-Setor.init(sequelize)
+Setores.init(sequelize)
 Colaborador.init(sequelize)
 
 const makeCpfValidator = () => {
@@ -87,36 +89,6 @@ const makeSut = () => {
     cpfValidatorSpy,
     emailValidatorSpy,
     phoneValidatorSpy
-  }
-}
-
-class RegisterUserRepository {
-  constructor ({ cpfValidator, emailValidator, phoneValidator }) {
-    this.cpfValidator = cpfValidator
-    this.emailValidator = emailValidator
-    this.phoneValidator = phoneValidator
-  }
-
-  async register ({ cpf, email, nome, telefone, setor }) {
-    try {
-      this.cpfValidator.validate(cpf)
-      this.emailValidator.validate(email)
-      this.phoneValidator.validate(telefone)
-
-      if (!setor) {
-        const ids = []
-        const setores = await Setor.findAll()
-        for (const item of setores) {
-          ids.push(item.dataValues.id)
-        }
-        setor = ids[Math.floor((Math.random() * ids.length))]
-      }
-
-      this.colaborador = await Colaborador.create({ cpf, email, nome, telefone, setor })
-      return this.colaborador.dataValues
-    } catch (error) {
-      throw new Error(error)
-    }
   }
 }
 
