@@ -23,4 +23,9 @@ describe('CPF Validator', () => {
       expect(response).toBe(true)
     }
   })
+
+  test('should throw if any CPF is invalid', async () => {
+    const sut = new CPFValidator()
+    expect(() => sut.validate('invalid_cpf')).toThrow('CPF invalid 400')
+  })
 })
