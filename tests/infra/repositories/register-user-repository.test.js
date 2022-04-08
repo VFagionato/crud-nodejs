@@ -85,7 +85,8 @@ class RegisterUserRepository {
         setor = ids[Math.floor((Math.random() * ids.length))]
       }
 
-      this.colaborador = Colaborador.build({ cpf, email, nome, telefone, setor })
+      this.colaborador = await Colaborador.create({ cpf, email, nome, telefone, setor })
+      return this.colaborador.dataValues
     } catch (error) {
       console.log(error)
       throw new Error(error)
@@ -100,6 +101,14 @@ describe('Register User Repository', () => {
     telefone: 11765787865,
     email: 'valid_mail@mail.com'
   }
+
+  beforeEach(async () => {
+    await Colaborador.destroy({
+      where: {
+        cpf: validParam.cpf
+      }
+    })
+  })
 
   afterAll(() => {
     sequelize.close()
@@ -133,5 +142,11 @@ describe('Register User Repository', () => {
     const { sut } = makeSut()
     await sut.register(validParam)
     expect(typeof sut.colaborador.setor).toBe('number')
+  })
+
+  test('should return user if it was saved in database', async () => {
+    const { sut } = makeSut()
+    const response = await sut.register(validParam)
+    expect(typeof response.id).toBe('number')
   })
 })
