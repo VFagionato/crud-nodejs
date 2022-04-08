@@ -1,22 +1,7 @@
 /* eslint-disable no-undef */
 const MissingParamError = require('../../../src/utils/errors/missing-param-error')
 
-class CPFValidator {
-  constructor () {
-    this.regex = /^[0-9]{3}.?[0-9]{3}.?[0-9]{3}-?[0-9]{2}/
-  }
-
-  validate (cpf) {
-    if (!cpf) {
-      throw new MissingParamError('cpf')
-    }
-    const isValid = this.regex.test(cpf)
-    if (!isValid) {
-      throw new Error('CPF invalid 400')
-    }
-    return true
-  }
-}
+const CPFValidator = require('../../../src/utils/helpers/cpf-validator')
 
 describe('CPF Validator', () => {
   test('should have regex property', () => {
