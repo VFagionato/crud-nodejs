@@ -4,6 +4,8 @@ const Colaborador = require('../../../src/infra/models/Colaboradores')
 const Sequelize = require('sequelize')
 const dbConfig = require('../../../src/main/config/db-config')
 
+const LoadUserByCPFRepository = require('../../../src/infra/repositories/load-user-cpf-repository')
+
 const mockConfig = { ...dbConfig, host: 'localhost' }
 const sequelize = new Sequelize(mockConfig)
 
@@ -11,18 +13,6 @@ Colaborador.init(sequelize)
 
 const makeSut = () => {
   return new LoadUserByCPFRepository()
-}
-
-class LoadUserByCPFRepository {
-  async load (cpf) {
-    if (!cpf) {
-      throw new MissingParamError('cpf')
-    }
-    const funded = await Colaborador.findOne({
-      where: { cpf }
-    })
-    return funded ? funded.dataValues : null
-  }
 }
 
 describe('Load User By CPF Repository', () => {
