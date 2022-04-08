@@ -131,6 +131,25 @@ describe('Register User Router', () => {
     expect(response.body).toEqual(registerUserRepositorySpy.user)
   })
 
+  test('should return 500 if invalid dependency is provided', async () => {
+    const invalid = {}
+    const suts = [].concat(
+      new RegisterUserRouter({
+        registerUserRepository: invalid,
+        loadUserByCPFRepository: makeLoadUserByCPFRepository()
+      }),
+      new RegisterUserRouter({
+        registerUserRepository: makeRegisterUserRepository(),
+        loadUserByCPFRepository: invalid
+      })
+    )
+
+    for (const sut of suts) {
+      const response = await sut.route(validRequest)
+      expect(response.statusCode).toBe(500)
+    }
+  })
+
   test('should return 500 with registerUserRepository throw', async () => {
     const sut = new RegisterUserRouter({ registerUserRepository: makeRegisterUserRepositoryWithError() })
     const response = await sut.route(validRequest)
