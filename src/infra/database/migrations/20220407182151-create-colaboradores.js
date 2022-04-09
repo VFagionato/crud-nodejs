@@ -32,7 +32,9 @@ module.exports = {
       setor: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: { model: 'setores', key: 'id' }
+        references: { model: 'setores', key: 'id' },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       created_at: {
         type: Sequelize.DATE,

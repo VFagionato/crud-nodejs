@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 const MissingParamError = require('../../../src/utils/errors/missing-param-error')
 const Colaboradores = require('../../../src/infra/models/Colaboradores')
+const Setores = require('../../../src/infra/models/Setores')
 const Sequelize = require('sequelize')
 const dbConfig = require('../../../src/main/config/db-config')
 const DeleteUserByIDRepository = require('../../../src/infra/repositories/delete-user-id-repository')
@@ -9,6 +10,8 @@ const mockConfig = { ...dbConfig, host: 'localhost' }
 const sequelize = new Sequelize(mockConfig)
 
 Colaboradores.init(sequelize)
+Setores.init(sequelize)
+Colaboradores.associate(sequelize.models)
 
 const makeSut = () => {
   return new DeleteUserByIDRepository()

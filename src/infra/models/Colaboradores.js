@@ -6,9 +6,15 @@ class Colaboradores extends Model {
       nome: DataTypes.STRING,
       email: DataTypes.STRING,
       telefone: DataTypes.BIGINT,
-      cpf: DataTypes.STRING,
-      setor: DataTypes.INTEGER
+      cpf: DataTypes.STRING
     }, { sequelize })
+  }
+
+  static associate (models) {
+    this.belongsTo(models.Setores, {
+      foreignKey: 'setor',
+      as: 'belongs_to'
+    })
   }
 }
 

@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 const Setores = require('../../../src/infra/models/Setores')
-const Colaborador = require('../../../src/infra/models/Colaboradores')
+const Colaboradores = require('../../../src/infra/models/Colaboradores')
 const Sequelize = require('sequelize')
 const dbConfig = require('../../../src/main/config/db-config')
 
@@ -10,7 +10,9 @@ const mockConfig = { ...dbConfig, host: 'localhost' }
 const sequelize = new Sequelize(mockConfig)
 
 Setores.init(sequelize)
-Colaborador.init(sequelize)
+Colaboradores.init(sequelize)
+
+Colaboradores.associate(sequelize.models)
 
 const makeCpfValidator = () => {
   class CpfValidator {
@@ -101,7 +103,7 @@ describe('Register User Repository', () => {
   }
 
   beforeEach(async () => {
-    await Colaborador.destroy({
+    await Colaboradores.destroy({
       where: {
         cpf: validParam.cpf
       }

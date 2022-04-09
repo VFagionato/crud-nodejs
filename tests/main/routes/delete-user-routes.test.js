@@ -3,6 +3,7 @@ const request = require('supertest')
 const app = require('../../../src/main/config/app')
 
 const Colaboradores = require('../../../src/infra/models/Colaboradores')
+const Setores = require('../../../src/infra/models/Setores')
 const Sequelize = require('sequelize')
 const dbConfig = require('../../../src/main/config/db-config')
 
@@ -10,6 +11,9 @@ const mockConfig = { ...dbConfig, host: 'localhost' }
 const sequelize = new Sequelize(mockConfig)
 
 Colaboradores.init(sequelize)
+Setores.init(sequelize)
+
+Colaboradores.associate(sequelize.models)
 
 describe('Delete User Integration Test', () => {
   afterAll(async () => {

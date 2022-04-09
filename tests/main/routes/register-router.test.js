@@ -3,7 +3,7 @@ const request = require('supertest')
 const app = require('../../../src/main/config/app')
 
 const Setores = require('../../../src/infra/models/Setores')
-const Colaborador = require('../../../src/infra/models/Colaboradores')
+const Colaboradores = require('../../../src/infra/models/Colaboradores')
 const Sequelize = require('sequelize')
 const dbConfig = require('../../../src/main/config/db-config')
 
@@ -11,7 +11,9 @@ const mockConfig = { ...dbConfig, host: 'localhost' }
 const sequelize = new Sequelize(mockConfig)
 
 Setores.init(sequelize)
-Colaborador.init(sequelize)
+Colaboradores.init(sequelize)
+
+Colaboradores.associate(sequelize.models)
 
 describe('Register User Integration Test', () => {
   const path = '/api/colaborador'
@@ -23,7 +25,7 @@ describe('Register User Integration Test', () => {
   }
 
   beforeEach(async () => {
-    await Colaborador.destroy({
+    await Colaboradores.destroy({
       where: {
         cpf: validBody.cpf
       }
