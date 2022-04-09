@@ -11,9 +11,6 @@ module.exports = class FetchUserRouter {
       const { id } = httpRequest.query
       if (!id) {
         const allColaboradores = await this.loadAllUsersRepository.load()
-        if (!allColaboradores.length) {
-          return HttpResponse.empty()
-        }
         return HttpResponse.ok(allColaboradores)
       }
 
@@ -21,8 +18,9 @@ module.exports = class FetchUserRouter {
       if (!colaborador) {
         return HttpResponse.notFound()
       }
-      return HttpResponse.ok(colaborador.dataValues)
+      return HttpResponse.ok(colaborador)
     } catch (error) {
+      console.log('AHOOU:', error)
       return HttpResponse.serverError(error.message)
     }
   }

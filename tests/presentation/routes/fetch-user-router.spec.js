@@ -66,14 +66,6 @@ describe('Fetch User Router', () => {
     expect(response.statusCode).toBe(200)
   })
 
-  test('should return 204 if loadAllUsersRepository return empty array', async () => {
-    const { sut, loadAllUsersRepositorySpy } = makeSut()
-    httpRequest.query = {}
-    loadAllUsersRepositorySpy.allUsers = []
-    const response = await sut.route(httpRequest)
-    expect(response.statusCode).toBe(204)
-  })
-
   test('should call loadUserByIDRepository with correct id', async () => {
     const { sut, loadUserByIDRepositorySpy } = makeSut()
     await sut.route(httpRequest)
