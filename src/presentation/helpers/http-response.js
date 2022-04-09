@@ -13,6 +13,12 @@ module.exports = class HttpResponse {
     }
   }
 
+  static empty () {
+    return {
+      statusCode: 204
+    }
+  }
+
   static badRequest (error) {
     return {
       statusCode: 400,

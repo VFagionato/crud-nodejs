@@ -23,12 +23,28 @@ const makeLoadUserByIDRepositoryWithError = () => {
   return new LoadUserByIDRepository()
 }
 
+const makeLoadAllUsersRepository = () => {
+  class LoadAllUsersRepository {
+    async load () {
+      return this.allUsers
+    }
+  }
+  const loadUserByIDRepository = new LoadAllUsersRepository()
+  loadUserByIDRepository.allUsers = ['setor_with_colaboradores']
+  return loadUserByIDRepository
+}
+
 const makeSut = () => {
+  const loadAllUsersRepositorySpy = makeLoadAllUsersRepository()
   const loadUserByIDRepositorySpy = makeLoadUserByIDRepository()
-  const sut = new FetchUserRouter({ loadUserByIDRepository: loadUserByIDRepositorySpy })
+  const sut = new FetchUserRouter({
+    loadUserByIDRepository: loadUserByIDRepositorySpy,
+    loadAllUsersRepository: loadAllUsersRepositorySpy
+  })
   return {
     sut,
-    loadUserByIDRepositorySpy
+    loadUserByIDRepositorySpy,
+    loadAllUsersRepositorySpy
   }
 }
 
@@ -43,11 +59,19 @@ describe('Fetch User Router', () => {
     httpRequest.query.id = 1
   })
 
-  test('should return 400 if query is invalid', async () => {
+  test('should return 200 if id not present in query', async () => {
     const { sut } = makeSut()
     httpRequest.query = {}
     const response = await sut.route(httpRequest)
-    expect(response.statusCode).toBe(400)
+    expect(response.statusCode).toBe(200)
+  })
+
+  test('should return 204 if loadAllUsersRepository return empty array', async () => {
+    const { sut, loadAllUsersRepositorySpy } = makeSut()
+    httpRequest.query = {}
+    loadAllUsersRepositorySpy.allUsers = []
+    const response = await sut.route(httpRequest)
+    expect(response.statusCode).toBe(204)
   })
 
   test('should call loadUserByIDRepository with correct id', async () => {
