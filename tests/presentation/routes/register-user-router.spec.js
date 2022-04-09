@@ -108,7 +108,6 @@ describe('Register User Router', () => {
     const { sut, loadUserByCPFRepositorySpy } = makeSut()
     loadUserByCPFRepositorySpy.user = 'valid_user'
     const response = await sut.route(validRequest)
-    console.log(response.body)
     expect(response.statusCode).toBe(400)
     expect(response.body).toBe('CPF already in use')
   })
