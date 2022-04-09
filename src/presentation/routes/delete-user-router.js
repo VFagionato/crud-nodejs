@@ -7,8 +7,8 @@ module.exports = class DeleteUserRouter {
 
   async route (httpRequest) {
     try {
-      const { id } = httpRequest.headers.query
-      if (!id || typeof id !== 'number') {
+      const { id } = httpRequest.query
+      if (!id) {
         return HttpResponse.badRequest()
       }
 
@@ -18,6 +18,7 @@ module.exports = class DeleteUserRouter {
       }
       return HttpResponse.ok()
     } catch (error) {
+      console.log(error)
       const status = parseInt(error.message.split(' ').pop())
       if (!isNaN(status)) {
         return HttpResponse.customResponse(status)
