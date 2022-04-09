@@ -11,45 +11,29 @@ const sequelize = new Sequelize(mockConfig)
 
 Colaboradores.init(sequelize)
 
-describe('Delete User Integration Test', () => {
-  afterAll(async () => {
-    const registers = await Colaboradores.findAll()
-    for (const register of registers) {
-      const { id } = register.dataValues
-      if (id > 3) {
-        await Colaboradores.destroy({
-          where: { id }
-        })
-      }
-    }
+describe('Fetch User Integration Test', () => {
+  const path = '/api/colaborador'
+  afterAll(() => {
     sequelize.close()
   })
 
   test('should return 200', async () => {
-    const colaborador = await Colaboradores.create({
-      nome: 'To Be Delete',
-      telefone: 119467657867,
-      email: 'delete_me@mail.com',
-      cpf: '876.665.345-98',
-      setor: 1
-    })
-
     await request(app)
-      .delete('/api/colaborador')
-      .query({ id: Number(colaborador.dataValues.id) })
+      .get(path)
+      .query({ id: 1 })
       .expect(200)
   })
 
   test('should return 404', async () => {
     await request(app)
-      .delete('/api/colaborador')
-      .query({ id: 677 })
+      .get(path)
+      .query({ id: 888 })
       .expect(404)
   })
 
   test('should return 400', async () => {
     await request(app)
-      .delete('/api/colaborador')
+      .get(path)
       .expect(400)
   })
 })
