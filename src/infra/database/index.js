@@ -8,4 +8,7 @@ const sequelize = new Sequelize(dbConfig)
 Setores.init(sequelize)
 Colaboradores.init(sequelize)
 
+Setores.hasMany(Colaboradores)
+Colaboradores.belongsTo(Setores)
+
 module.exports = sequelize
