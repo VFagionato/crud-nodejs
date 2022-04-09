@@ -34,33 +34,20 @@ const makeSut = () => {
   }
 }
 
-describe('Remove User Router', () => {
+describe('Delete User Router', () => {
   const httpRequest = {
-    headers: {
-      query: {
-        id: 1
-      }
+    query: {
+      id: 1
     }
   }
 
   afterEach(() => {
-    httpRequest.headers = {
-      query: {
-        id: 1
-      }
-    }
+    httpRequest.query.id = 1
   })
 
   test('should return 400 if query is invalid', async () => {
     const { sut } = makeSut()
-    httpRequest.headers.query = {}
-    const response = await sut.route(httpRequest)
-    expect(response.statusCode).toBe(400)
-  })
-
-  test('should return 400 if id is not a number', async () => {
-    const { sut } = makeSut()
-    httpRequest.headers.query.id = '123'
+    httpRequest.query = {}
     const response = await sut.route(httpRequest)
     expect(response.statusCode).toBe(400)
   })
@@ -68,7 +55,7 @@ describe('Remove User Router', () => {
   test('should call deleteUserByIDRepository with correct id', async () => {
     const { sut, deleteUserByIDRepositorySpy } = makeSut()
     await sut.route(httpRequest)
-    expect(deleteUserByIDRepositorySpy.id).toBe(httpRequest.headers.query.id)
+    expect(deleteUserByIDRepositorySpy.id).toBe(httpRequest.query.id)
   })
 
   test('should return 200 if id is deleted', async () => {
