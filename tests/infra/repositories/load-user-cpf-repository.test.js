@@ -34,7 +34,7 @@ describe('Load User By CPF Repository', () => {
     expect(response).toBeNull()
   })
 
-  test('shoudl return a user if CPF funded', async () => {
+  test('should return a user if CPF funded', async () => {
     const sut = makeSut()
     const response = await sut.load(cpf)
     expect(response).toBeTruthy()
