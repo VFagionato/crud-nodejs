@@ -151,6 +151,7 @@ describe('Register User Router', () => {
 
   test('should return 500 if any dependency throw', async () => {
     const suts = [].concat(
+      new RegisterUserRouter(),
       new RegisterUserRouter({
         registerUserRepository: makeRegisterUserRepositoryWithError(),
         loadUserByCPFRepository: makeLoadUserByCPFRepository()

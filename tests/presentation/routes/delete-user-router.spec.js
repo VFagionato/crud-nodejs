@@ -83,4 +83,10 @@ describe('Delete User Router', () => {
     const response = await sut.route(httpRequest)
     expect(response.statusCode).toBe(500)
   })
+
+  test('should return 500 if invalid dependency is provided', async () => {
+    const sut = new DeleteUserRouter()
+    const response = await sut.route(httpRequest)
+    expect(response.statusCode).toBe(500)
+  })
 })

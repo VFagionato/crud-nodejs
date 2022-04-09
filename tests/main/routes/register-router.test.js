@@ -41,6 +41,13 @@ describe('Register User Integration Test', () => {
       .expect(201)
   })
 
+  test('should return 201 if setor pass in body', async () => {
+    await request(app)
+      .post(path)
+      .send({ ...validBody, setor: 2 })
+      .expect(201)
+  })
+
   test('should return 400 if user try register an CPF already registered in database', async () => {
     await request(app)
       .post(path)
