@@ -18,10 +18,6 @@ module.exports = class FetchUserRouter {
       }
       return HttpResponse.ok(colaborador.dataValues)
     } catch (error) {
-      const status = parseInt(error.message.split(' ').pop())
-      if (!isNaN(status)) {
-        return HttpResponse.customResponse(status)
-      }
       return HttpResponse.serverError()
     }
   }

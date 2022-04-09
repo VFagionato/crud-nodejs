@@ -18,11 +18,6 @@ module.exports = class DeleteUserRouter {
       }
       return HttpResponse.ok()
     } catch (error) {
-      console.log(error)
-      const status = parseInt(error.message.split(' ').pop())
-      if (!isNaN(status)) {
-        return HttpResponse.customResponse(status)
-      }
       return HttpResponse.serverError(error.message)
     }
   }
