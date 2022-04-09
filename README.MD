@@ -36,7 +36,7 @@ abaixo seguem as instruções de instalação e utilização da API.
 
 
 
-## Instalação e Utilização
+## Instalação
 o código abaixo irá subir dois containers.
 
 Sendo o primeiro um banco de dados postgres já populado com algumas informações
@@ -76,7 +76,9 @@ exemplo de um body valido:
 {
   "cpf": "698.506.960-60",
   "nome": "João",
-  "email": "valido@mail.com",
+  "email": "valido@mail.com"
   "telefone": 117648272901
 }
 ```
+### Remover um colaborador
+Método DELETE em http://localhost:300/api/colaborador/?id=<id_do_colaborador>
